@@ -5,13 +5,18 @@
 package travel.management.system;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 /**
  *
  * @author ashrafulislam
  */
-public class Signup extends JFrame{
+public class Signup extends JFrame implements ActionListener{
+    
+    JButton create, back;
+    JTextField tfusername, tfname, tfpassword, tfanswer;
+    Choice security;
     
     Signup(){
         getContentPane().setBackground(Color.WHITE);
@@ -29,7 +34,7 @@ public class Signup extends JFrame{
         lblusername.setFont(new Font("Tahoma", Font.BOLD, 14));
         p1.add(lblusername);
         
-        JTextField tfusername = new JTextField();
+        tfusername = new JTextField();
         tfusername.setBounds(190, 20, 180, 25);
         tfusername.setBorder(BorderFactory.createEmptyBorder());
         p1.add(tfusername);
@@ -39,7 +44,7 @@ public class Signup extends JFrame{
         lblname.setFont(new Font("Tahoma", Font.BOLD, 14));
         p1.add(lblname);
         
-        JTextField tfname = new JTextField();
+        tfname = new JTextField();
         tfname.setBounds(190, 60, 180, 25);
         tfname.setBorder(BorderFactory.createEmptyBorder());
         p1.add(tfname);
@@ -49,7 +54,7 @@ public class Signup extends JFrame{
         lblpassword.setFont(new Font("Tahoma", Font.BOLD, 14));
         p1.add(lblpassword);
         
-        JTextField tfpassword = new JTextField();
+        tfpassword = new JTextField();
         tfpassword.setBounds(190, 100, 180, 25);
         tfpassword.setBorder(BorderFactory.createEmptyBorder());
         p1.add(tfpassword);
@@ -59,7 +64,7 @@ public class Signup extends JFrame{
         lblsecurity.setFont(new Font("Tahoma", Font.BOLD, 14));
         p1.add(lblsecurity);
         
-        Choice security = new Choice();
+        security = new Choice();
         security.add("Fav character from The Boys");
         security.add("Fav character from The Suits");
         security.add("Your lukcy number");
@@ -72,13 +77,13 @@ public class Signup extends JFrame{
         lblanswer.setFont(new Font("Tahoma", Font.BOLD, 14));
         p1.add(lblanswer);
         
-        JTextField tfanswer = new JTextField();
+        tfanswer = new JTextField();
         tfanswer.setBounds(190, 180, 180, 25);
         tfanswer.setBorder(BorderFactory.createEmptyBorder());
         p1.add(tfanswer);
         
         
-        JButton create = new JButton("Create");
+        create = new JButton("Create");
         create.setBackground(Color.WHITE);
         create.setForeground(new Color(133, 193, 233));
         create.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -86,9 +91,10 @@ public class Signup extends JFrame{
 //        create.setOpaque(true); // Ensure the button is opaque
 //        create.setContentAreaFilled(false); // Ensure content area is not filled by default look and feel
 //        create.setContentAreaFilled(true);
+        create.addActionListener(this); // this one call the actionPermed method
         p1.add(create);
         
-        JButton back = new JButton("Back");
+        back = new JButton("Back");
         back.setBackground(Color.WHITE);
         back.setForeground(new Color(133, 193, 233));
         back.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -96,6 +102,7 @@ public class Signup extends JFrame{
 //        back.setOpaque(true); // Ensure the button is opaque
 //        back.setContentAreaFilled(false); // Ensure content area is not filled by default look and feel
 //        back.setContentAreaFilled(true);
+        back.addActionListener(this); // this one call the actionPermed method
         p1.add(back);
         
         
@@ -112,5 +119,35 @@ public class Signup extends JFrame{
     
     public static void main(String[] args){
         new Signup();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        if( ae.getSource() == create){
+            
+            // here we are taking out the input from the user using the get text method from the respected fields and use get selected item method to take the input from dropdown.
+            String username = tfusername.getText(); 
+            String name = tfname.getText();
+            String password = tfpassword.getText();
+            String question = security.getSelectedItem();
+            String answer = tfanswer.getText();
+            
+            String query = "insert into account values('"+username+"','"+name+"','"+password+"','"+question+"','"+answer+"')";
+            try{
+                
+                Conn c = new Conn();
+                c.s.executeUpdate(query);
+                
+                JOptionPane.showMessageDialog(null, "Account Created Successfully");
+                setVisible(false);
+                new Login();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        else if( ae.getSource() == back){
+            setVisible(false);
+            new Login();
+        }
     }
 }
